@@ -13,11 +13,12 @@ let playing = false
 
 function setup() {
     canvas = createCanvas(800, 500);
+    textAlign(CENTER);
     noSmooth();
     model = new SystemModel();
     let conceptX = 680;
     let conceptY = 30;
-    let conceptYDelta = 70;
+    let conceptYDelta = 40;
     conceptsRoot.forEach(concept=>{
         concepts.push(new Concept(
             concept.title,
@@ -47,7 +48,7 @@ function setup() {
         )
     buttons.push(introButton)
     introButton.hide = true;
-    buttons.push(new Button("Begin",
+    buttons.push(new Button("Meet Ariel",
         300,200,70,30,10,
         function(){
             playClip("0");
@@ -55,6 +56,10 @@ function setup() {
                 return this === b
             })
             buttons.splice(i,1);
+            concepts.forEach(c=>{
+                c.visible = true;
+                c.state = 0;
+            })
         }))
 }
   
@@ -62,22 +67,26 @@ function draw() {
     if(playing){
         checkCues();
     }
+    
     clear();
     concepts.forEach( concept =>{
         concept.over();
         concept.show();
     })
+    if(!hideModel){
+        model.show();
+    }
     if(!hideQuestions){
         questions.forEach(q=>{
             q.show();
         })
+    }
+    if(!hideQuestions || !hideModel){
         drags.forEach(drag =>{
             drag.update();
             drag.over();
             drag.show();
         })  
-    }else if(!hideModel){
-        model.show();
     }
     buttons.forEach(b =>{
         b.over();
@@ -138,19 +147,25 @@ function activateQuestions(qids){
 }
 
 function playClip(id){
+    concepts.forEach(c=>{
+        if(c.state == 2){
+            c.state = 4
+        }
+    })
     clearQuestions();   
     lastId = id;
     let catItem = catalogue.find(c=>{
         return c.id == id;
     })
     playVideo(catItem);
+    
 }
 function runCue(cue){
     switch (cue.type){
         case "expose":
             concepts.find(c=>{
                 return c.id == cue.target
-            }).visible = true
+            }).state = 4
     }
 }
 function playAgain(){
@@ -161,6 +176,14 @@ function showModel(){
     introButton.hide = true;
     hideQuestions = true;
     hideModel = false;
+    concepts.forEach(c=>{
+        if(c.state == 4 ){
+            c.state = 2;
+        }
+    })
+    model.model.objs.forEach(o=>{
+        o.hide = false
+    })
     model.showButtons()
 }
 
@@ -170,8 +193,20 @@ function showQuestions(){
     }else{
         introButton.hide = false
     }
+    concepts.forEach(c=>{
+        if(c.state != 0){
+            if(c.questions.length > 0){
+                c.state = 2;
+            }else{
+                c.state = 4
+            }
+        }
+    })
     hideQuestions = false;
     hideModel = true;
+    model.model.objs.forEach(o=>{
+        o.hide = true
+    })
     model.hideButtons();
 }
 
@@ -202,16 +237,24 @@ let conceptsRoot = [
      id:  1,
      questions: ['a','b'], 
     },
+    {title: "coral \nlarvea",
+    id:  2,
+    questions: [], 
+   },
     {title: "seaweed",
-     id:  2,
+     id:  3,
      questions: ['a'], 
     },
+    {title: "seaweed \nseeds",
+    id:  3,
+    questions: [], 
+    },
     {title: "fish",
-     id:  3,
+     id:  4,
      questions: [], 
     },
     {title: "humans",
-     id:  4,
+     id:  5,
      questions: [], 
     },
 ];

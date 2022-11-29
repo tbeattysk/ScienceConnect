@@ -11,15 +11,14 @@ class Reciever{
     show(x,y){
         this.x = x;
         this.y = y;
-        if(!this.obj){
-            noFill();
-            stroke(0);
-            strokeWeight(1.5)
-            if(this.active){
-                rect(x, y, this.w, this.h);
-            }else{
-                line(this.x, this.y+this.h, this.x+this.w, this.y+this.h)
-            }
+        noFill();
+        stroke(0);
+        strokeWeight(1.5)
+        if(this.active){
+            rect(x, y, this.w, this.h);
+        }
+        else if(!this.obj){
+            line(this.x, this.y+this.h, this.x+this.w, this.y+this.h)
         }
     }
     receive(obj){
@@ -37,5 +36,9 @@ class Reciever{
             return true;
         }
         return false;
+    }
+    remove(obj){
+        this.parent.hidePlay();
+        this.obj = null;
     }
 }

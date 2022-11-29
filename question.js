@@ -20,6 +20,7 @@ class Question{
 
     }
     show(){
+        textAlign(LEFT);
         fill(200,240)
         noStroke()
         rect(this.x-10, this.y - 33, 450, 60)

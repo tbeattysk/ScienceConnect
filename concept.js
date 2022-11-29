@@ -1,11 +1,14 @@
 class Concept {
     constructor(title,id,questions,x,y) {
 
-        this.rollover = false; // Is the mouse over the ellipse?
         this.visible = false;
-        this.active = true;
+        this.state = 0;
 
         this.text = title;
+        this.textYOffset =0;
+        if(title.split("\n").length > 1){
+          this.textYOffset = -9
+        }
         this.id = id;
         this.questions = questions;
 
@@ -19,42 +22,56 @@ class Concept {
   
     over() {
       // Is mouse over object
-      if (mouseX > this.x && mouseX < this.x + this.w && mouseY > this.y && mouseY < this.y + this.h) {
-        this.rollover = true;
-      } else {
-        this.rollover = false;
+      if ((this.state == 2 ||this.state ==3) && mouseX > this.x && mouseX < this.x + this.w && mouseY > this.y && mouseY < this.y + this.h) {
+        this.state = 3
+      } else if(this.state == 3){
+        this.state = 2
       }
-  
     }
-  
-    update() {
-      // Adjust location if being dragged
-      if (this.dragging) {
-        this.x = mouseX + this.offsetX;
-        this.y = mouseY + this.offsetY;
-      }
-  
-    }
+
   
     show() {
       if(this.visible){
+        textAlign(CENTER);
         noStroke();
-        
-        // Different fill based on state
-        if (this.rollover) {
-          fill(150);
-        } else {
-         fill(175, 200);
+        switch(this.state){
+          case 0: //hidden
+            this.fill = color(0,0,0,0)
+            this.stroke = color(175,180)
+            this.textColor = color(0,0)
+            break;
+          case 1: //anticipate
+            this.fill = color(175, 200)
+            this.stroke = color(0,0)
+            this.textColor = color(0)
+            break;
+          case 2: //active
+            this.fill = color(175, 200)
+            this.stroke = color(0,0)
+            this.textColor = color(0)
+            break;
+          case 3: //rollover
+            this.fill = color(150)
+            this.stroke = color(0,0)
+            this.textColor = color(0)
+            break
+          case 4: //inactive
+            this.fill = color(180)
+            this.stroke = color(0,0)
+            this.textColor = color(255)
+            break;
         }
+        fill(this.fill)
+        stroke(this.stroke)
         rect(this.x, this.y, this.w, this.h, this.r);
-        noStroke()
-        fill(0);
-        text(this.text,this.x+20, this.y+this.h/2+5)
+        noStroke();
+        fill(this.textColor);
+        text(this.text,this.x+this.w/2, this.y+this.h/2+5+ this.textYOffset)
       }
     }
   
     pressed() {
-      if(this.visible && this.active){
+      if(this.state==3){
       // Did I click on the rectangle?
         if (mouseX > this.x && mouseX < this.x + this.w && mouseY > this.y && mouseY < this.y + this.h) {
           drags.push(new Draggable(this));

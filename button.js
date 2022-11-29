@@ -1,3 +1,6 @@
+
+//for play/pause button! http://zenozeng.github.io/p5.js-svg/
+
 class Button{
     constructor(text,x,y,w,h,r,event){
         this.text = text;
@@ -12,6 +15,7 @@ class Button{
 
     show() {
         if(!this.hide){
+            textAlign(CENTER);
             stroke(0);
             // Different fill based on state
             if (this.rollover) {
@@ -23,7 +27,16 @@ class Button{
             rect(this.x, this.y, this.w, this.h, this.r);
             fill(0)
             noStroke()
-            text(this.text,this.x+20, this.y+this.h/2+5)
+            if(this.text == ">"){
+                fill(255,80,80);
+                beginShape()
+                vertex(this.x+this.h/4, this.y+this.h/4);
+                vertex(this.x+3*this.h/4, this.y+this.h/2);
+                vertex(this.x+this.h/4, this.y+3*this.h/4);
+                endShape()
+            }else{
+                text(this.text,this.x+this.w/2, this.y+this.h/2+5)
+            }
         }
     }
 

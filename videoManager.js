@@ -76,17 +76,17 @@ let catalogue = [
         title: "Introduction",
         id: "0",
         start: 0,
-        end: 54.5,
+        end: 2,
         cues: [
             {
-                time: 19,
+                time: 1, //19
                 type: "expose",
                 target: "1",
             },
             {
-                time: 46,
+                time: 1, //46
                 type: "expose",
-                target: "2"
+                target: "3"
             }
         ]
     },
@@ -94,8 +94,13 @@ let catalogue = [
         title: "Coral in and out of system",
         id: "a1",
         start: 55,
-        end: 82,
+        end: 56, //82
         cues: [
+            {
+                time: 55.5,
+                type: "expose",
+                target: "2"
+            }
         ]
     },
     {
@@ -108,7 +113,7 @@ let catalogue = [
     },
     {
         title: "Seaweed movement",
-        id: "a2",
+        id: "a3",
         start: 127,
         end: 174,
         cues: [
